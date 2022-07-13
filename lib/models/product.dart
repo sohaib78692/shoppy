@@ -6,7 +6,7 @@ part 'product.g.dart';
 class Product {
   String title;
   double price;
-  String id;
+  int id;
   String description;
   String image;
 

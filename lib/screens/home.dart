@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shoppy/components/grid_card.dart';
 import 'package:shoppy/models/product.dart';
@@ -18,19 +17,24 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<List<Product>>? products;
 
   @override
-  void initState (){
+  void initState() {
     super.initState();
-    products = FirestoreUtil.getProducts([]);
+    setState(() {
+      products = FirestoreUtil.getProducts([]);
+    });
   }
+
+  onCardPress(Product product) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProductScreen(
+                  product: product,
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
-    onCardPress(Product product) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => ProductScreen(
-            product: product,
-          )));
-    }
-
     return FutureBuilder<List<Product>>(
         future: products,
         builder: (context, AsyncSnapshot<List<Product>> snapshot) {
@@ -42,16 +46,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2, mainAxisSpacing: 30, crossAxisSpacing: 30),
               itemBuilder: (BuildContext context, int index) {
                 return GridCard(
-                  product:snapshot.data![index],
-                  index: index, 
-                  onpress: (){
-                  onCardPress(snapshot.data![index]);
-                  });
+                    product: snapshot.data![index],
+                    index: index,
+                    onpress: () {
+                      onCardPress(snapshot.data![index]);
+                    });
               },
             );
-          }
-          else {
-            return const Center(child:Loader());
+          } else {
+            return const Center(child: Loader());
           }
         });
 
